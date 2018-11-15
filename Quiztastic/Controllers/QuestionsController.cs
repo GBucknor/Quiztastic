@@ -12,56 +12,56 @@ namespace Quiztastic.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class QuizzesController : ControllerBase
+    public class QuestionsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public QuizzesController(ApplicationDbContext context)
+        public QuestionsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Quizzes
+        // GET: api/Questions
         [HttpGet]
-        public IEnumerable<Quiz> GetQuizzes()
+        public IEnumerable<Question> GetQuestions()
         {
-            return _context.Quizzes;
+            return _context.Questions;
         }
 
-        // GET: api/Quizzes/5
+        // GET: api/Questions/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetQuiz([FromRoute] string id)
+        public async Task<IActionResult> GetQuestion([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var quiz = await _context.Quizzes.FindAsync(id);
+            var question = await _context.Questions.FindAsync(id);
 
-            if (quiz == null)
+            if (question == null)
             {
                 return NotFound();
             }
 
-            return Ok(quiz);
+            return Ok(question);
         }
 
-        // PUT: api/Quizzes/5
+        // PUT: api/Questions/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuiz([FromRoute] string id, [FromBody] Quiz quiz)
+        public async Task<IActionResult> PutQuestion([FromRoute] string id, [FromBody] Question question)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != quiz.QuizId)
+            if (id != question.QuestionId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(quiz).State = EntityState.Modified;
+            _context.Entry(question).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace Quiztastic.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!QuizExists(id))
+                if (!QuestionExists(id))
                 {
                     return NotFound();
                 }
@@ -82,45 +82,45 @@ namespace Quiztastic.Controllers
             return NoContent();
         }
 
-        // POST: api/Quizzes
+        // POST: api/Questions
         [HttpPost]
-        public async Task<IActionResult> PostQuiz([FromBody] Quiz quiz)
+        public async Task<IActionResult> PostQuestion([FromBody] Question question)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Quizzes.Add(quiz);
+            _context.Questions.Add(question);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetQuiz", new { id = quiz.QuizId }, quiz);
+            return CreatedAtAction("GetQuestion", new { id = question.QuestionId }, question);
         }
 
-        // DELETE: api/Quizzes/5
+        // DELETE: api/Questions/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuiz([FromRoute] string id)
+        public async Task<IActionResult> DeleteQuestion([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null)
+            var question = await _context.Questions.FindAsync(id);
+            if (question == null)
             {
                 return NotFound();
             }
 
-            _context.Quizzes.Remove(quiz);
+            _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
 
-            return Ok(quiz);
+            return Ok(question);
         }
 
-        private bool QuizExists(string id)
+        private bool QuestionExists(string id)
         {
-            return _context.Quizzes.Any(e => e.QuizId == id);
+            return _context.Questions.Any(e => e.QuestionId == id);
         }
     }
 }

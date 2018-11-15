@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Quiztastic.Models.Auth;
+using Quiztastic.Models.Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +82,53 @@ namespace Quiztastic.Data
                     await userManager.AddToRoleAsync(user, role2);
                 }
             }
+
+            if (context.Quizzes != null && context.Quizzes.Any())
+            {
+                return; // DB Seeded
+            }
+
+            var quiz = new Quiz
+            {
+                QuizId = "Javascript",
+                QuizName = "Javascript",
+                NumberOfQuestions = 5
+            };
+
+            var q1 = new Question
+            {
+                QuestionId = "JS-Q1",
+                QuestionContent = "Inside which HTML element do we put the JavaScript?",
+                QuizId = "Javascript",
+            };
+
+            var q2 = new Question
+            {
+                QuestionId = "JS-Q2",
+                QuestionContent = "Inside which HTML element do we put the JavaScript?",
+                QuizId = "Javascript",
+            };
+
+            var q3 = new Question
+            {
+                QuestionId = "JS-Q3",
+                QuestionContent = "Inside which HTML element do we put the JavaScript?",
+                QuizId = "Javascript",
+            };
+
+            var q4 = new Question
+            {
+                QuestionId = "JS-Q4",
+                QuestionContent = "Inside which HTML element do we put the JavaScript?",
+                QuizId = "Javascript",
+            };
+
+            var q5 = new Question
+            {
+                QuestionId = "JS-Q5",
+                QuestionContent = "Inside which HTML element do we put the JavaScript?",
+                QuizId = "Javascript",
+            };
         }
     }
 }

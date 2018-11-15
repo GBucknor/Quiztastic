@@ -24,23 +24,32 @@ namespace Quiztastic.Controllers
             _context = context;
         }
 
-        // POST: api/User/{id}
+        // POST: api/User/
         [HttpPost]
         public async Task<IActionResult> Post([FromHeader] string UserId)
         {
+            var userList = _context.Users.Where(u => u.BadgeBookId == UserId).ToList();
             Dictionary<string, string> dict = new Dictionary<string, string>
             {
                 { "Javascript", "7th" }
             };
-            UserScoreModel user = new UserScoreModel { UserId = UserId, UserRank = dict };
+            UserScoreModel user = new UserScoreModel { UserId = userList.First().UserName, UserRank = dict };
 
             return Ok(user);
         }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put([FromHeader] string UserId)
         {
+            var userList = _context.Users.Where(u => u.BadgeBookId == UserId).ToList();
+            Dictionary<string, string> dict = new Dictionary<string, string>
+            {
+                { "Javascript", "7th" }
+            };
+            UserScoreModel user = new UserScoreModel { UserId = userList.First().Email, UserRank = dict };
+
+            return Ok(user);
         }
 
         // DELETE: api/ApiWithActions/5
