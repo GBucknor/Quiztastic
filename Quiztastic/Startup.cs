@@ -88,7 +88,6 @@ namespace Quiztastic
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseCors("CorsPolicy");
 
