@@ -28,23 +28,19 @@ namespace Quiztastic.Controllers
             return _context.Answers;
         }
 
+        [HttpGet("correct/{id}")]
+        public IEnumerable<Answer> GetCorrectAnswer([FromRoute] string id)
+        {
+            return _context.Answers.Where(a => a.QuestionId == id && a.IsCorrect == true);
+        }
+
         // GET: api/Answers/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAnswer([FromRoute] int id)
+        public IEnumerable<Answer> GetAnswer([FromRoute] string id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var answers = _context.Answers.Where(a => a.QuestionId == id);
 
-            var answer = await _context.Answers.FindAsync(id);
-
-            if (answer == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(answer);
+            return answers;
         }
 
         // PUT: api/Answers/5

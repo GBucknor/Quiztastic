@@ -1,26 +1,22 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quiztastic.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles");
+
             migrationBuilder.AddColumn<string>(
                 name: "BadgeBookId",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "City",
-                table: "AspNetUsers",
-                maxLength: 20,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Country",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -34,29 +30,6 @@ namespace Quiztastic.Data.Migrations
                 name: "LastName",
                 table: "AspNetUsers",
                 maxLength: 20,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Phone",
-                table: "AspNetUsers",
-                maxLength: 10,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "PostalCode",
-                table: "AspNetUsers",
-                maxLength: 7,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Province",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Street",
-                table: "AspNetUsers",
-                maxLength: 30,
                 nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(
@@ -76,6 +49,7 @@ namespace Quiztastic.Data.Migrations
                 {
                     QuizId = table.Column<string>(nullable: false),
                     QuizName = table.Column<string>(nullable: true),
+                    QuizDescription = table.Column<string>(nullable: true),
                     NumberOfQuestions = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -107,7 +81,7 @@ namespace Quiztastic.Data.Migrations
                 columns: table => new
                 {
                     RankId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     QuizScore = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
                     QuizId = table.Column<string>(nullable: true)
@@ -121,6 +95,12 @@ namespace Quiztastic.Data.Migrations
                         principalTable: "Quizzes",
                         principalColumn: "QuizId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ranks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,7 +108,7 @@ namespace Quiztastic.Data.Migrations
                 columns: table => new
                 {
                     AnswerId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     AnswerText = table.Column<string>(nullable: true),
                     IsCorrect = table.Column<bool>(nullable: false),
                     QuestionId = table.Column<string>(nullable: true)
@@ -145,6 +125,18 @@ namespace Quiztastic.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Answers_QuestionId",
                 table: "Answers",
                 column: "QuestionId");
@@ -158,6 +150,11 @@ namespace Quiztastic.Data.Migrations
                 name: "IX_Ranks_QuizId",
                 table: "Ranks",
                 column: "QuizId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ranks_UserId",
+                table: "Ranks",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -174,16 +171,16 @@ namespace Quiztastic.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Quizzes");
 
+            migrationBuilder.DropIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles");
+
             migrationBuilder.DropColumn(
                 name: "BadgeBookId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "City",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Country",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
@@ -195,28 +192,26 @@ namespace Quiztastic.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Phone",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "PostalCode",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Province",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Street",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
                 name: "CreatedDate",
                 table: "AspNetRoles");
 
             migrationBuilder.DropColumn(
                 name: "Description",
                 table: "AspNetRoles");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
         }
     }
 }

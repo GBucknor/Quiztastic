@@ -23,28 +23,19 @@ namespace Quiztastic.Controllers
 
         // GET: api/Questions
         [HttpGet]
-        public IEnumerable<Question> GetQuestions()
+        public IEnumerable<Question> GetQuestions([FromRoute] string quizId)
         {
+            //return _context.Questions.Where(q => q.QuizId == quizId);
             return _context.Questions;
         }
 
         // GET: api/Questions/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetQuestion([FromRoute] string id)
+        public IEnumerable<Question> GetQuestion([FromRoute] string id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var questions = _context.Questions.Where(q => q.QuizId == id);
 
-            var question = await _context.Questions.FindAsync(id);
-
-            if (question == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(question);
+            return questions;
         }
 
         // PUT: api/Questions/5

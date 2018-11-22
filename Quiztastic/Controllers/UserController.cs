@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Quiztastic.Data;
 using Quiztastic.Models.Auth;
+using Quiztastic.Models.Quiz;
 
 namespace Quiztastic.Controllers
 {
@@ -26,36 +27,19 @@ namespace Quiztastic.Controllers
 
         // POST: api/User/
         [HttpPost]
-        public async Task<IActionResult> Post([FromHeader] string UserId)
+        public ActionResult Post([FromHeader] string UserId)
         {
-            var userList = _context.Users.Where(u => u.BadgeBookId == UserId).ToList();
-            Dictionary<string, string> dict = new Dictionary<string, string>
+            AppUser appUser = _context.Users.Where(u => u.BadgeBookId == UserId).ToList().First();
+            var ranks = _context.Ranks.Where(r => r.UserId == appUser.Id);
+            Dictionary<string, int> scores = new Dictionary<string, int>();
+            foreach(Rank rank in ranks)
             {
-                { "Javascript", "7th" }
-            };
-            UserScoreModel user = new UserScoreModel { UserId = userList.First().UserName, UserRank = dict };
+                string key = _context.Quizzes.Find(rank.QuizId).QuizName;
+                scores.Add(key, rank.QuizScore);
+            }
+            UserScoreModel user = new UserScoreModel { UserId = appUser.BadgeBookId, UserRank = scores };
 
             return Ok(user);
-        }
-
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromHeader] string UserId)
-        {
-            var userList = _context.Users.Where(u => u.BadgeBookId == UserId).ToList();
-            Dictionary<string, string> dict = new Dictionary<string, string>
-            {
-                { "Javascript", "7th" }
-            };
-            UserScoreModel user = new UserScoreModel { UserId = userList.First().Email, UserRank = dict };
-
-            return Ok(user);
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

@@ -28,6 +28,18 @@ namespace Quiztastic.Controllers
             return _context.Quizzes;
         }
 
+        [HttpGet("correct/{id}")]
+        public ActionResult GetQuizAnswers([FromRoute] string id)
+        {
+            var questions = _context.Questions.Where(q => q.QuizId == id);
+            var answers = new Dictionary<string, string>();
+            foreach (Question question in questions)
+            {
+                answers.Add(question.QuestionId, _context.Answers.Where(a => a.QuestionId == question.QuestionId && a.IsCorrect == true).Single().AnswerText);
+            }
+            return Ok(answers);
+        }
+
         // GET: api/Quizzes/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetQuiz([FromRoute] string id)
@@ -110,6 +122,15 @@ namespace Quiztastic.Controllers
             if (quiz == null)
             {
                 return NotFound();
+            }
+
+            foreach (Question question in _context.Questions.Where(q => q.QuizId == id))
+            {
+                foreach(Answer answer in _context.Answers.Where(a => a.QuestionId == question.QuestionId))
+                {
+                    _context.Answers.Remove(answer);
+                }
+                _context.Questions.Remove(question);
             }
 
             _context.Quizzes.Remove(quiz);

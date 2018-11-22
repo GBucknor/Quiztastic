@@ -43,12 +43,6 @@ namespace Quiztastic.Data
                     Email = "a@a.a",
                     FirstName = "Clark",
                     LastName = "Kent",
-                    Street = "Granville St",
-                    City = "Vancouver",
-                    Province = "BC",
-                    PostalCode = "V5U K8I",
-                    Country = "Canada",
-                    PhoneNumber = "6902341234"
                 };
 
                 var result = await userManager.CreateAsync(user, password);
@@ -67,12 +61,6 @@ namespace Quiztastic.Data
                     Email = "m@m.m",
                     FirstName = "Madeline",
                     LastName = "Barker",
-                    Street = "Vermont St",
-                    City = "Surrey",
-                    Province = "BC",
-                    PostalCode = "V1P I5T",
-                    Country = "Canada",
-                    PhoneNumber = "7788951456",
                     BadgeBookId = "Maddy1"
                 };
 
@@ -82,53 +70,6 @@ namespace Quiztastic.Data
                     await userManager.AddToRoleAsync(user, role2);
                 }
             }
-
-            if (context.Quizzes != null && context.Quizzes.Any())
-            {
-                return; // DB Seeded
-            }
-
-            var quiz = new Quiz
-            {
-                QuizId = "Javascript",
-                QuizName = "Javascript",
-                NumberOfQuestions = 5
-            };
-
-            var q1 = new Question
-            {
-                QuestionId = "JS-Q1",
-                QuestionContent = "Inside which HTML element do we put the JavaScript?",
-                QuizId = "Javascript",
-            };
-
-            var q2 = new Question
-            {
-                QuestionId = "JS-Q2",
-                QuestionContent = "Inside which HTML element do we put the JavaScript?",
-                QuizId = "Javascript",
-            };
-
-            var q3 = new Question
-            {
-                QuestionId = "JS-Q3",
-                QuestionContent = "Inside which HTML element do we put the JavaScript?",
-                QuizId = "Javascript",
-            };
-
-            var q4 = new Question
-            {
-                QuestionId = "JS-Q4",
-                QuestionContent = "Inside which HTML element do we put the JavaScript?",
-                QuizId = "Javascript",
-            };
-
-            var q5 = new Question
-            {
-                QuestionId = "JS-Q5",
-                QuestionContent = "Inside which HTML element do we put the JavaScript?",
-                QuizId = "Javascript",
-            };
         }
     }
 }

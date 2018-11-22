@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiztastic.Data;
 
@@ -15,15 +14,12 @@ namespace Quiztastic.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType");
 
@@ -42,8 +38,7 @@ namespace Quiztastic.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType");
 
@@ -131,8 +126,7 @@ namespace Quiztastic.Data.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -146,13 +140,8 @@ namespace Quiztastic.Data.Migrations
 
                     b.Property<string>("BadgeBookId");
 
-                    b.Property<string>("City")
-                        .HasMaxLength(20);
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("Country");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -177,22 +166,11 @@ namespace Quiztastic.Data.Migrations
 
                     b.Property<string>("PasswordHash");
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(10);
-
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("PostalCode")
-                        .HasMaxLength(7);
-
-                    b.Property<string>("Province");
-
                     b.Property<string>("SecurityStamp");
-
-                    b.Property<string>("Street")
-                        .HasMaxLength(30);
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -206,8 +184,7 @@ namespace Quiztastic.Data.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -215,8 +192,7 @@ namespace Quiztastic.Data.Migrations
             modelBuilder.Entity("Quiztastic.Models.Quiz.Answer", b =>
                 {
                     b.Property<int>("AnswerId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("AnswerText");
 
@@ -254,6 +230,8 @@ namespace Quiztastic.Data.Migrations
 
                     b.Property<int>("NumberOfQuestions");
 
+                    b.Property<string>("QuizDescription");
+
                     b.Property<string>("QuizName");
 
                     b.HasKey("QuizId");
@@ -264,8 +242,7 @@ namespace Quiztastic.Data.Migrations
             modelBuilder.Entity("Quiztastic.Models.Quiz.Rank", b =>
                 {
                     b.Property<int>("RankId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("QuizId");
 
@@ -276,6 +253,8 @@ namespace Quiztastic.Data.Migrations
                     b.HasKey("RankId");
 
                     b.HasIndex("QuizId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ranks");
                 });
@@ -344,6 +323,10 @@ namespace Quiztastic.Data.Migrations
                     b.HasOne("Quiztastic.Models.Quiz.Quiz", "Quiz")
                         .WithMany("Ranks")
                         .HasForeignKey("QuizId");
+
+                    b.HasOne("Quiztastic.Models.Auth.AppUser", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }
