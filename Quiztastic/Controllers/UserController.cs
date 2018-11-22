@@ -27,8 +27,13 @@ namespace Quiztastic.Controllers
 
         // POST: api/User/
         [HttpPost]
-        public ActionResult Post([FromHeader] string UserId)
+        public ActionResult Post([FromHeader] string UserId, [FromHeader] string AppToken)
         {
+            string token = _context.AppTokens.Where(t => t.Token == AppToken).First().Token;
+            if (AppToken == null || AppToken.Equals(""))
+            {
+                return Unauthorized();
+            }
             AppUser appUser = _context.Users.Where(u => u.BadgeBookId == UserId).ToList().First();
             var ranks = _context.Ranks.Where(r => r.UserId == appUser.Id);
             Dictionary<string, int> scores = new Dictionary<string, int>();

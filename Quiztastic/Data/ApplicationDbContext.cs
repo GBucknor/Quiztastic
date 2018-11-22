@@ -20,5 +20,6 @@ namespace Quiztastic.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Rank> Ranks { get; set; }
+        public DbSet<AppTokens> AppTokens { get; set; }
     }
 }
