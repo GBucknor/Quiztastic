@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiztastic.Data;
 
-namespace Quiztastic.Data.Migrations
+namespace Quiztastic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181121203353_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20181129074310_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -133,6 +133,22 @@ namespace Quiztastic.Data.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("Quiztastic.Models.Auth.AppTokens", b =>
+                {
+                    b.Property<string>("AppId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AppName");
+
+                    b.Property<string>("Permission");
+
+                    b.Property<string>("Token");
+
+                    b.HasKey("AppId");
+
+                    b.ToTable("AppTokens");
+                });
+
             modelBuilder.Entity("Quiztastic.Models.Auth.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -207,6 +223,22 @@ namespace Quiztastic.Data.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("Quiztastic.Models.Quiz.Badge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FileName");
+
+                    b.Property<string>("QuizId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("Badges");
                 });
 
             modelBuilder.Entity("Quiztastic.Models.Quiz.Question", b =>
@@ -311,6 +343,13 @@ namespace Quiztastic.Data.Migrations
                     b.HasOne("Quiztastic.Models.Quiz.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId");
+                });
+
+            modelBuilder.Entity("Quiztastic.Models.Quiz.Badge", b =>
+                {
+                    b.HasOne("Quiztastic.Models.Quiz.Quiz", "Quiz")
+                        .WithMany()
+                        .HasForeignKey("QuizId");
                 });
 
             modelBuilder.Entity("Quiztastic.Models.Quiz.Question", b =>

@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiztastic.Data;
 
-namespace Quiztastic.Data.Migrations
+namespace Quiztastic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181122173234_SecondMigration")]
-    partial class SecondMigration
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,6 +223,22 @@ namespace Quiztastic.Data.Migrations
                     b.ToTable("Answers");
                 });
 
+            modelBuilder.Entity("Quiztastic.Models.Quiz.Badge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FileName");
+
+                    b.Property<string>("QuizId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("Badges");
+                });
+
             modelBuilder.Entity("Quiztastic.Models.Quiz.Question", b =>
                 {
                     b.Property<string>("QuestionId")
@@ -327,6 +341,13 @@ namespace Quiztastic.Data.Migrations
                     b.HasOne("Quiztastic.Models.Quiz.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId");
+                });
+
+            modelBuilder.Entity("Quiztastic.Models.Quiz.Badge", b =>
+                {
+                    b.HasOne("Quiztastic.Models.Quiz.Quiz", "Quiz")
+                        .WithMany()
+                        .HasForeignKey("QuizId");
                 });
 
             modelBuilder.Entity("Quiztastic.Models.Quiz.Question", b =>

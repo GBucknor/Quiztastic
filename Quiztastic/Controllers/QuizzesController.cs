@@ -17,6 +17,7 @@ namespace Quiztastic.Controllers
     [ApiController]
     public class QuizzesController : ControllerBase
     {
+        private readonly string[] ACCEPTED_FILE_TYPES = new[] { ".jpg", ".jpeg", ".png" };
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _environment;
 
@@ -143,29 +144,42 @@ namespace Quiztastic.Controllers
                 _context.Ranks.Remove(rank);
             }
 
+            Badge badge = _context.Badges.Where(b => b.QuizId == id).Single();
+            var filesPath = Path.Combine(_environment.WebRootPath, "uploads/" + badge.FileName);
+            System.IO.File.Delete(filesPath);
+            _context.Badges.Remove(badge);
+
             _context.Quizzes.Remove(quiz);
             await _context.SaveChangesAsync();
 
             return Ok(quiz);
         }
 
-        [HttpPost("badge")]
-        public async Task<IActionResult> PostUserImage(IFormFile file)
+        [HttpPost("badge/{id}")]
+        public async Task<IActionResult> PostUserImage([FromRoute] string quizId, [FromForm] IFormFile file)
         {
-            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            if (file.Length > 0)
+            if (file == null) return BadRequest("Null File");
+            if (file.Length == 0)
             {
-                var path = Path.Combine(uploads, file.FileName);
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                    return Ok(new
-                    {
-                        imageUrl = path
-                    });
-                }
+                return BadRequest("Empty File");
             }
-            return BadRequest();
+            if (file.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded.");
+            if (!ACCEPTED_FILE_TYPES.Any(s => s == Path.GetExtension(file.FileName).ToLower())) return BadRequest("Invalid file type.");
+            var uploadFilesPath = Path.Combine(_environment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadFilesPath))
+                Directory.CreateDirectory(uploadFilesPath);
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadFilesPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            var photo = new Badge { FileName = fileName, QuizId = quizId };
+            _context.Badges.Add(photo);
+            await _context.SaveChangesAsync();
+            return Ok(new {
+                imagepath = filePath
+            });
         }
 
         private bool QuizExists(string id)
