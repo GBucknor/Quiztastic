@@ -17,5 +17,6 @@ namespace Quiztastic.Models.Quiz
         public int NumberOfQuestions { get; set; }
         public List<Question> Questions { get; set; }
         public List<Rank> Ranks { get; set; }
+        public string quizBadge { get; set; }
     }
 }

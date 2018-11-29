@@ -90,7 +90,7 @@ namespace Quiztastic
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
             app.UseCors("CorsPolicy");
-
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
             DummyData.Initialize(context, userManager, roleManager).Wait();

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +18,12 @@ namespace Quiztastic.Controllers
     public class QuizzesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _environment;
 
-        public QuizzesController(ApplicationDbContext context)
+        public QuizzesController(ApplicationDbContext context, IHostingEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: api/Quizzes
@@ -133,10 +138,34 @@ namespace Quiztastic.Controllers
                 _context.Questions.Remove(question);
             }
 
+            foreach (Rank rank in _context.Ranks.Where(r => r.QuizId == id))
+            {
+                _context.Ranks.Remove(rank);
+            }
+
             _context.Quizzes.Remove(quiz);
             await _context.SaveChangesAsync();
 
             return Ok(quiz);
+        }
+
+        [HttpPost("badge")]
+        public async Task<IActionResult> PostUserImage(IFormFile file)
+        {
+            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
+            if (file.Length > 0)
+            {
+                var path = Path.Combine(uploads, file.FileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                    return Ok(new
+                    {
+                        imageUrl = path
+                    });
+                }
+            }
+            return BadRequest();
         }
 
         private bool QuizExists(string id)
