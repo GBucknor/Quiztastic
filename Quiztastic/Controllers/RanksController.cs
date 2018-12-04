@@ -67,6 +67,44 @@ namespace Quiztastic.Controllers
             return Ok(rank);
         }
 
+        [HttpGet("q/{quizId}/{userId}")]
+        public async Task<IActionResult> GetUserRank([FromRoute] string quizId, string userId)
+        {
+            Rank userScore = _context.Ranks.Where(r => r.QuizId == quizId && r.UserId == userId).Single();
+            List<Rank> scores = _context.Ranks.Where(r => r.QuizId == quizId).OrderByDescending(r => r.QuizScore).ToList();
+            int index = scores.FindIndex(r => r.RankId == userScore.RankId);
+            return Ok(new {
+                rank = _getOrdinal(index + 1),
+                quiz = _context.Quizzes.Where(q => q.QuizId == quizId) 
+            });
+        }
+
+        [NonAction]
+        private string _getOrdinal(int num)
+        {
+            if (num <= 0) return num.ToString();
+
+            switch (num % 100)
+            {
+                case 11:
+                case 12:
+                case 13:
+                    return num + "th";
+            }
+
+            switch (num % 10)
+            {
+                case 1:
+                    return num + "st";
+                case 2:
+                    return num + "nd";
+                case 3:
+                    return num + "rd";
+                default:
+                    return num + "th";
+            }
+        }
+
         // PUT: api/Ranks/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRank([FromRoute] int id, [FromBody] Rank rank)
@@ -99,7 +137,7 @@ namespace Quiztastic.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(rank);
         }
 
         // POST: api/Ranks

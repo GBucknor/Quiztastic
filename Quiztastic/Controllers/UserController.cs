@@ -39,7 +39,8 @@ namespace Quiztastic.Controllers
             Dictionary<string, int> scores = new Dictionary<string, int>();
             foreach(Rank rank in ranks)
             {
-                string key = _context.Quizzes.Find(rank.QuizId).QuizName;
+                Quiz quiz = _context.Quizzes.Find(rank.QuizId);
+                string key = quiz.QuizId;
                 scores.Add(key, rank.QuizScore);
             }
             UserScoreModel user = new UserScoreModel { UserId = appUser.BadgeBookId, UserRank = scores };
