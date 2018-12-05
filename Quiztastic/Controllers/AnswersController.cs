@@ -99,12 +99,15 @@ namespace Quiztastic.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            } else
+            {
+                return Ok(ModelState);
             }
 
-            _context.Answers.Add(answer);
-            await _context.SaveChangesAsync();
+            //_context.Answers.Add(answer);
+            //await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAnswer", new { id = answer.AnswerId }, answer);
+            //return CreatedAtAction("GetAnswer", new { id = answer.AnswerId }, answer);
         }
 
         // DELETE: api/Answers/5
