@@ -79,7 +79,7 @@ namespace Quiztastic.Controllers
         }
 
         // POST: api/Answers
-        [HttpPost]
+        [HttpPost("a")]
         public async Task<IActionResult> PostAnswer([FromBody] Answer answer)
         {
             if (!ModelState.IsValid)
