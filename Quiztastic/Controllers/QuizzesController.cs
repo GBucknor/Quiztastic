@@ -17,14 +17,11 @@ namespace Quiztastic.Controllers
     [ApiController]
     public class QuizzesController : ControllerBase
     {
-        private readonly string[] ACCEPTED_FILE_TYPES = new[] { ".jpg", ".jpeg", ".png" };
         private readonly ApplicationDbContext _context;
-        private readonly IHostingEnvironment _environment;
 
-        public QuizzesController(ApplicationDbContext context, IHostingEnvironment environment)
+        public QuizzesController(ApplicationDbContext context)
         {
             _context = context;
-            _environment = environment;
         }
 
         // GET: api/Quizzes
@@ -184,7 +181,6 @@ namespace Quiztastic.Controllers
         //    });
         //}
 
-        [NonAction]
         private bool QuizExists(string id)
         {
             return _context.Quizzes.Any(e => e.QuizId == id);
