@@ -68,18 +68,11 @@ namespace Quiztastic.Data.Migrations
                     QuizName = table.Column<string>(nullable: true),
                     QuizDescription = table.Column<string>(nullable: true),
                     NumberOfQuestions = table.Column<int>(nullable: false),
-                    BadgeBookId = table.Column<string>(nullable: true),
-                    AppUserId = table.Column<int>(nullable: true)
+                    BadgeBookId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Quizzes", x => x.QuizId);
-                    table.ForeignKey(
-                        name: "FK_Quizzes_AppUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AppUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -322,11 +315,6 @@ namespace Quiztastic.Data.Migrations
                 column: "QuizId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Quizzes_AppUserId",
-                table: "Quizzes",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ranks_QuizId",
                 table: "Ranks",
                 column: "QuizId");
@@ -336,6 +324,9 @@ namespace Quiztastic.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Answers");
+
+            migrationBuilder.DropTable(
+                name: "AppUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -369,9 +360,6 @@ namespace Quiztastic.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Quizzes");
-
-            migrationBuilder.DropTable(
-                name: "AppUsers");
         }
     }
 }

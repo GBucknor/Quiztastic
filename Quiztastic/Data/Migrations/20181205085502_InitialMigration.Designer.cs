@@ -9,7 +9,7 @@ using Quiztastic.Data;
 namespace Quiztastic.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181205071913_InitialMigration")]
+    [Migration("20181205085502_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,8 +244,6 @@ namespace Quiztastic.Data.Migrations
                     b.Property<string>("QuizId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AppUserId");
-
                     b.Property<string>("BadgeBookId");
 
                     b.Property<int>("NumberOfQuestions");
@@ -255,8 +253,6 @@ namespace Quiztastic.Data.Migrations
                     b.Property<string>("QuizName");
 
                     b.HasKey("QuizId");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Quizzes");
                 });
@@ -343,13 +339,6 @@ namespace Quiztastic.Data.Migrations
                     b.HasOne("Quiztastic.Models.Quiz.Quiz", "Quiz")
                         .WithMany("Questions")
                         .HasForeignKey("QuizId");
-                });
-
-            modelBuilder.Entity("Quiztastic.Models.Quiz.Quiz", b =>
-                {
-                    b.HasOne("Quiztastic.Models.Auth.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("Quiztastic.Models.Quiz.Rank", b =>
