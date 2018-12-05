@@ -100,7 +100,7 @@ namespace Quiztastic.Controllers
             return NoContent();
         }
 
-        // POST: api/Quizzes
+        // POST: api/Quizzes/post
         [HttpPost("post")]
         public async Task<IActionResult> PostQuiz([FromBody] Quiz quiz)
         {
