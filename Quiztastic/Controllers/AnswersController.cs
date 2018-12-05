@@ -94,7 +94,7 @@ namespace Quiztastic.Controllers
         }
 
         [HttpGet("getpost")]
-        public async Task<IActionResult> TestController([FromBody] Answer answer)
+        public ActionResult TestController([FromBody] Answer answer)
         {
             if (!ModelState.IsValid)
             {

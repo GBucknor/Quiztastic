@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quiztastic.Data.Migrations
 {
@@ -19,26 +20,6 @@ namespace Quiztastic.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Quizzes", x => x.QuizId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Badges",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FileName = table.Column<string>(nullable: true),
-                    QuizId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Badges", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Badges_Quizzes_QuizId",
-                        column: x => x.QuizId,
-                        principalTable: "Quizzes",
-                        principalColumn: "QuizId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,7 +46,7 @@ namespace Quiztastic.Data.Migrations
                 columns: table => new
                 {
                     RankId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     QuizScore = table.Column<int>(nullable: false),
                     BadgeBookId = table.Column<string>(nullable: true),
                     QuizId = table.Column<string>(nullable: true)
@@ -86,7 +67,7 @@ namespace Quiztastic.Data.Migrations
                 columns: table => new
                 {
                     AnswerId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AnswerText = table.Column<string>(nullable: true),
                     IsCorrect = table.Column<bool>(nullable: false),
                     QuestionId = table.Column<string>(nullable: true)
@@ -108,11 +89,6 @@ namespace Quiztastic.Data.Migrations
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Badges_QuizId",
-                table: "Badges",
-                column: "QuizId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Questions_QuizId",
                 table: "Questions",
                 column: "QuizId");
@@ -127,9 +103,6 @@ namespace Quiztastic.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Answers");
-
-            migrationBuilder.DropTable(
-                name: "Badges");
 
             migrationBuilder.DropTable(
                 name: "Ranks");
