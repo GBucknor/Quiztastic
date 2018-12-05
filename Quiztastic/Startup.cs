@@ -11,6 +11,10 @@ using Quiztastic.Models.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
+using System;
+using System.IO;
 
 namespace Quiztastic
 {
@@ -60,6 +64,13 @@ namespace Quiztastic
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SigningKey"]))
                 };
             });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Quiztastic API", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -82,9 +93,16 @@ namespace Quiztastic
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
             app.UseCors("CorsPolicy");
-            app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Quiz API V1");
+            });
             app.UseMvc();
+            app.Run(async c => {
+                c.Response.Redirect("swagger");
+            });
         }
     }
 }

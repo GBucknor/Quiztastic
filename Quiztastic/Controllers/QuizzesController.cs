@@ -101,7 +101,7 @@ namespace Quiztastic.Controllers
         }
 
         // POST: api/Quizzes
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<IActionResult> PostQuiz([FromBody] Quiz quiz)
         {
             if (!ModelState.IsValid)
@@ -150,33 +150,34 @@ namespace Quiztastic.Controllers
             return Ok(quiz);
         }
 
-        [HttpPost("badge/{id}")]
-        public async Task<IActionResult> PostUserImage([FromRoute] string quizId, [FromForm] IFormFile file)
-        {
-            if (file == null) return BadRequest("Null File");
-            if (file.Length == 0)
-            {
-                return BadRequest("Empty File");
-            }
-            if (file.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded.");
-            if (!ACCEPTED_FILE_TYPES.Any(s => s == Path.GetExtension(file.FileName).ToLower())) return BadRequest("Invalid file type.");
-            var uploadFilesPath = Path.Combine(_environment.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadFilesPath))
-                Directory.CreateDirectory(uploadFilesPath);
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var filePath = Path.Combine(uploadFilesPath, fileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            var photo = new Badge { FileName = fileName, QuizId = quizId };
-            _context.Badges.Add(photo);
-            await _context.SaveChangesAsync();
-            return Ok(new {
-                imagepath = filePath
-            });
-        }
+        //[HttpPost("badge/{id}")]
+        //public async Task<IActionResult> PostUserImage([FromRoute] string quizId, [FromForm] IFormFile file)
+        //{
+        //    if (file == null) return BadRequest("Null File");
+        //    if (file.Length == 0)
+        //    {
+        //        return BadRequest("Empty File");
+        //    }
+        //    if (file.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded.");
+        //    if (!ACCEPTED_FILE_TYPES.Any(s => s == Path.GetExtension(file.FileName).ToLower())) return BadRequest("Invalid file type.");
+        //    var uploadFilesPath = Path.Combine(_environment.WebRootPath, "uploads");
+        //    if (!Directory.Exists(uploadFilesPath))
+        //        Directory.CreateDirectory(uploadFilesPath);
+        //    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        //    var filePath = Path.Combine(uploadFilesPath, fileName);
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
+        //    var photo = new Badge { FileName = fileName, QuizId = quizId };
+        //    _context.Badges.Add(photo);
+        //    await _context.SaveChangesAsync();
+        //    return Ok(new {
+        //        imagepath = filePath
+        //    });
+        //}
 
+        [NonAction]
         private bool QuizExists(string id)
         {
             return _context.Quizzes.Any(e => e.QuizId == id);

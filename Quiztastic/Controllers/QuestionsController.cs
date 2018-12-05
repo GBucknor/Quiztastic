@@ -109,6 +109,7 @@ namespace Quiztastic.Controllers
             return Ok(question);
         }
 
+        [NonAction]
         private bool QuestionExists(string id)
         {
             return _context.Questions.Any(e => e.QuestionId == id);

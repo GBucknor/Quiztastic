@@ -11,7 +11,6 @@ using Quiztastic.Models.Quiz;
 
 namespace Quiztastic.Controllers
 {
-    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RanksController : ControllerBase
