@@ -109,7 +109,14 @@ namespace Quiztastic.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Quizzes.Add(quiz);
+            try
+            {
+                _context.Quizzes.Add(quiz);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetQuiz", new { id = quiz.QuizId }, quiz);
