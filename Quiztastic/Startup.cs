@@ -44,12 +44,6 @@ namespace Quiztastic
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<AppUser, AppRole>(
-                options => options.Stores.MaxLengthForKeys = 128)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultUI()
-                .AddDefaultTokenProviders();
-
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -72,9 +66,7 @@ namespace Quiztastic
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            ApplicationDbContext context,
-            UserManager<AppUser> userManager,
-            RoleManager<AppRole> roleManager)
+            ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -93,7 +85,6 @@ namespace Quiztastic
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
-            DummyData.Initialize(context, userManager, roleManager).Wait();
         }
     }
 }

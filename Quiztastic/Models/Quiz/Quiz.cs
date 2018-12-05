@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quiztastic.Models.Auth;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace Quiztastic.Models.Quiz
         public int NumberOfQuestions { get; set; }
         public List<Question> Questions { get; set; }
         public List<Rank> Ranks { get; set; }
+        public string BadgeBookId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

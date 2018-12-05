@@ -38,7 +38,7 @@ namespace Quiztastic.Controllers
                 return BadRequest(ModelState);
             }
 
-            Rank rank = _context.Ranks.Where(r => r.QuizId == model.QuizId && r.UserId == model.UserId).FirstOrDefault();
+            Rank rank = _context.Ranks.Where(r => r.QuizId == model.QuizId && r.BadgeBookId == model.BadgeBookId).FirstOrDefault();
 
             if (rank != null)
             {
@@ -68,9 +68,9 @@ namespace Quiztastic.Controllers
         }
 
         [HttpGet("q/{quizId}/{userId}")]
-        public async Task<IActionResult> GetUserRank([FromRoute] string quizId, string userId)
+        public ActionResult GetUserRank([FromRoute] string quizId, string userId)
         {
-            Rank userScore = _context.Ranks.Where(r => r.QuizId == quizId && r.UserId == userId).Single();
+            Rank userScore = _context.Ranks.Where(r => r.QuizId == quizId && r.BadgeBookId == userId).Single();
             List<Rank> scores = _context.Ranks.Where(r => r.QuizId == quizId).OrderByDescending(r => r.QuizScore).ToList();
             int index = scores.FindIndex(r => r.RankId == userScore.RankId);
             return Ok(new {

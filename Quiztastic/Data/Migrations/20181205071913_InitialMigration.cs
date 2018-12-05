@@ -1,24 +1,24 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Quiztastic.Migrations
+namespace Quiztastic.Data.Migrations
 {
     public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AppTokens",
+                name: "AppUsers",
                 columns: table => new
                 {
-                    AppId = table.Column<string>(nullable: false),
-                    AppName = table.Column<string>(nullable: true),
-                    Token = table.Column<string>(nullable: true),
-                    Permission = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Email = table.Column<string>(nullable: true),
+                    BadgeBookId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppTokens", x => x.AppId);
+                    table.PrimaryKey("PK_AppUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -28,9 +28,7 @@ namespace Quiztastic.Migrations
                     Id = table.Column<string>(nullable: false),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false)
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,10 +53,7 @@ namespace Quiztastic.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(maxLength: 20, nullable: true),
-                    LastName = table.Column<string>(maxLength: 20, nullable: true),
-                    BadgeBookId = table.Column<string>(nullable: true)
+                    AccessFailedCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,11 +67,19 @@ namespace Quiztastic.Migrations
                     QuizId = table.Column<string>(nullable: false),
                     QuizName = table.Column<string>(nullable: true),
                     QuizDescription = table.Column<string>(nullable: true),
-                    NumberOfQuestions = table.Column<int>(nullable: false)
+                    NumberOfQuestions = table.Column<int>(nullable: false),
+                    BadgeBookId = table.Column<string>(nullable: true),
+                    AppUserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Quizzes", x => x.QuizId);
+                    table.ForeignKey(
+                        name: "FK_Quizzes_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,8 +128,8 @@ namespace Quiztastic.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -170,8 +173,8 @@ namespace Quiztastic.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -231,7 +234,7 @@ namespace Quiztastic.Migrations
                     RankId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     QuizScore = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
+                    BadgeBookId = table.Column<string>(nullable: true),
                     QuizId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -242,12 +245,6 @@ namespace Quiztastic.Migrations
                         column: x => x.QuizId,
                         principalTable: "Quizzes",
                         principalColumn: "QuizId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ranks_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -325,23 +322,20 @@ namespace Quiztastic.Migrations
                 column: "QuizId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Quizzes_AppUserId",
+                table: "Quizzes",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ranks_QuizId",
                 table: "Ranks",
                 column: "QuizId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ranks_UserId",
-                table: "Ranks",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Answers");
-
-            migrationBuilder.DropTable(
-                name: "AppTokens");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -375,6 +369,9 @@ namespace Quiztastic.Migrations
 
             migrationBuilder.DropTable(
                 name: "Quizzes");
+
+            migrationBuilder.DropTable(
+                name: "AppUsers");
         }
     }
 }

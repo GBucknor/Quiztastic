@@ -12,8 +12,7 @@ namespace Quiztastic.Models.Quiz
         [Key]
         public int RankId { get; set; }
         public int QuizScore { get; set; }
-        public string UserId { get; set; }
-        public AppUser user { get; set; }
+        public string BadgeBookId { get; set; }
         public string QuizId { get; set; }
         public Quiz Quiz { get; set; }
     }

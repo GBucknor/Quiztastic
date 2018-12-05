@@ -144,11 +144,6 @@ namespace Quiztastic.Controllers
                 _context.Ranks.Remove(rank);
             }
 
-            Badge badge = _context.Badges.Where(b => b.QuizId == id).Single();
-            var filesPath = Path.Combine(_environment.WebRootPath, "uploads/" + badge.FileName);
-            System.IO.File.Delete(filesPath);
-            _context.Badges.Remove(badge);
-
             _context.Quizzes.Remove(quiz);
             await _context.SaveChangesAsync();
 

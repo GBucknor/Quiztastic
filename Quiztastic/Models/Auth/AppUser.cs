@@ -7,18 +7,11 @@ using System.Threading.Tasks;
 
 namespace Quiztastic.Models.Auth
 {
-    public class AppUser : IdentityUser
+    public class AppUser
     {
-        public AppUser() : base() { }
-        [Display(Name = "First Name")]
-        [MinLength(2)]
-        [MaxLength(20)]
-        public string FirstName { get; set; }
-        [Display(Name = "Last Name")]
-        [MinLength(2)]
-        [MaxLength(20)]
-        public string LastName { get; set; }
-        [Display(Name = "Badge Book Id")]
+        [Key]
+        public int Id { get; set; }
+        public string Email { get; set; }
         public string BadgeBookId { get; set; }
     }
 }
