@@ -94,9 +94,17 @@ namespace Quiztastic.Controllers
         }
 
         [HttpGet("getpost")]
-        public ActionResult TestController()
+        public async Task<IActionResult> TestController([FromBody] Answer answer)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Answers.Add(answer);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetAnswer", new { id = answer.AnswerId }, answer);
         }
 
         // DELETE: api/Answers/5
