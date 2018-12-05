@@ -98,7 +98,7 @@ namespace Quiztastic.Controllers
         }
 
         // POST: api/Quizzes/post
-        [HttpPost("post")]
+        [HttpPost]
         public async Task<IActionResult> PostQuiz([FromBody] Quiz quiz)
         {
             if (!ModelState.IsValid)
