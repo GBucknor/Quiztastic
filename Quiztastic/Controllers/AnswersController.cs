@@ -79,7 +79,7 @@ namespace Quiztastic.Controllers
         }
 
         // POST: api/Answers
-        [HttpPost("a")]
+        [HttpPost]
         public async Task<IActionResult> PostAnswer([FromBody] Answer answer)
         {
             if (!ModelState.IsValid)
@@ -91,6 +91,12 @@ namespace Quiztastic.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAnswer", new { id = answer.AnswerId }, answer);
+        }
+
+        [HttpGet("getpost")]
+        public ActionResult TestController()
+        {
+            return Ok();
         }
 
         // DELETE: api/Answers/5
