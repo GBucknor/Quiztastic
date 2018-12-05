@@ -119,6 +119,27 @@ namespace Quiztastic.Controllers
             return CreatedAtAction("GetQuiz", new { id = quiz.QuizId }, quiz);
         }
 
+        [HttpPost("q")]
+        public async Task<IActionResult> StoreQuiz([FromBody] Quiz quiz)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                _context.Quizzes.Add(quiz);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetQuiz", new { id = quiz.QuizId }, quiz);
+        }
+
         // DELETE: api/Quizzes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuiz([FromRoute] string id)
