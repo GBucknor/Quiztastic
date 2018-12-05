@@ -74,7 +74,7 @@ namespace Quiztastic.Controllers
             int index = scores.FindIndex(r => r.RankId == userScore.RankId);
             return Ok(new {
                 rank = _getOrdinal(index + 1),
-                quiz = _context.Quizzes.Where(q => q.QuizId == quizId) 
+                quiz = _context.Quizzes.Where(q => q.QuizId == quizId).Single().QuizName
             });
         }
 
